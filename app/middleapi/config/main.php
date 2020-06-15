@@ -19,7 +19,7 @@ return [
     ],
     'components' => [
         'user' => [
-			'identityClass' => 'common\models\User',
+			'identityClass' => 'common\models\UserCopy',
 			'enableAutoLogin' => true,
 			'enableSession' => false,
         ],
@@ -37,11 +37,18 @@ return [
 			'showScriptName' => false,
 			'enableStrictParsing' => true,
 			'rules' => [
-				[
-					'class' => 'yii\rest\UrlRule',
-					'controller' => ['v1/article'],
-					'pluralize'=>false,
-				],
+                ['class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/article',
+                    'ruleConfig'=>[
+                        'class'=>'yii\web\UrlRule',
+                        'defaults'=>[
+                            'expand'=>'createdBy',
+                        ]
+                    ],
+                    'extraPatterns'=>[
+                        'POST search' => 'search'
+                    ],
+                ],
 				[
 					'class' => 'yii\rest\UrlRule',
 					'controller' => ['v1/user-copy'],
@@ -52,7 +59,7 @@ return [
 				],
                 [
                     'class' => 'yii\rest\UrlRule',
-                    'controller' => ['v1/captcha'],
+                    'controller' => ['v1/verify'],
                     'pluralize'=>false,
                     'extraPatterns' => [
                         'POST yzm' => 'yzm',
@@ -60,10 +67,10 @@ return [
                 ],
                 [
                     'class' => 'yii\rest\UrlRule',
-                    'controller' => ['v1/captcha'],
+                    'controller' => ['v1/verify'],
                     'pluralize'=>false,
                     'extraPatterns' => [
-                        'POST validate-yzm' => 'validate-yzm',
+                        'POST captcha' => 'captcha',
                     ]
                 ]
 			]

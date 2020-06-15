@@ -33,7 +33,7 @@ use yii\helpers\ArrayHelper;
  * @property string $balance 余额
  * @property int $updated_at 更新时间
  */
-class UserCopy extends \yii\db\ActiveRecord
+class UserCopy extends \yii\db\ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;

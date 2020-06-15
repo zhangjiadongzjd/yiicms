@@ -5,6 +5,7 @@ use Yii;
 use yii\base\Model;
 use common\models\UserCopy;
 use common\components\ipaddress;
+use yii\captcha\CaptchaValidator;
 
 /**
  * Login form
@@ -28,19 +29,21 @@ class LoginForm extends Model
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
             ['verifyCode', 'required','message' => '验证码错误'], //验证码
-            ['verifyCode', 'captcha','captchaAction'=>'v1/captcha/validate-yzm'], //验证码
+            ['verifyCode', 'captcha','captchaAction'=>'/v1/verify/captcha'], //验证码
 //            ['verifyCode', 'validateCaptcha'], //验证码
         ];
     }
 
     public function validateCaptcha($attribute, $params)
     {
-        var_dump($this->verifyCode);exit();
-        if (!$this->hasErrors()) {
-            $user = $this->getUser();
-            if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
-            }
+//        $caprcha = new CaptchaValidator();
+//
+//        $result = $caprcha->validate($this->verifyCode);
+        $caprcha = new CaptchaValidator();
+
+//        $result = $caprcha->validate($code,false);
+        if(!$caprcha->validate(Yii::$app->request->post('verifyCode'))){
+            $this->addError($attribute, '1231313');
         }
     }
 
@@ -68,14 +71,15 @@ class LoginForm extends Model
      */
     public function login()
     {
-        var_dump($this->validate());die;
         if ($this->validate()) {
             $accessToken = $this->_user->generateAccessToken(time()+2400);
+
             $ipaddress = new ipaddress();
 			//下面更新用户登录相关信息
 			$this->_user->last_login_date = time();
 			$this->_user->last_login_ip = Yii::$app->request->getRemoteIP();
 			$this->_user->last_login_address = $ipaddress->getIpAddress($this->_user->last_login_ip);
+//            $this->_user->validate(['username','password']);
             $this->_user->save();
             return  $accessToken;
         } else {

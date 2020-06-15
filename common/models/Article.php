@@ -78,7 +78,7 @@ class Article extends \yii\db\ActiveRecord implements Linkable
             [['content'], 'string'],
             [['category_id', 'status', 'created_by', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'string', 'max' => 512],
-            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => Adminuser::className(), 'targetAttribute' => ['created_by' => 'id']],
+            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => UserCopy::className(), 'targetAttribute' => ['created_by' => 'id']],
         ];
     }
 
@@ -104,7 +104,7 @@ class Article extends \yii\db\ActiveRecord implements Linkable
      */
     public function getCreatedBy()
     {
-        return $this->hasOne(Adminuser::className(), ['id' => 'created_by']);
+        return $this->hasOne(UserCopy::className(), ['id' => 'created_by']);
     }
     
     public function beforeSave($insert)
