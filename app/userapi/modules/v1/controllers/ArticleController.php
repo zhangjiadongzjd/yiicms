@@ -3,6 +3,7 @@
 namespace userapi\modules\v1\controllers;
 
 use yii\rest\ActiveController;
+use yii\data\ActiveDataProvider;
 use yii\filters\auth\QueryParamAuth;
 use yii\helpers\ArrayHelper;
 use common\models\Article;
@@ -28,7 +29,6 @@ class ArticleController extends ActiveController
 
     public function actionIndex()
     {
-        var_dump(111);die;
         $modelClass = $this->modelClass;
         return new ActiveDataProvider(
             [

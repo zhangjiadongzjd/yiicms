@@ -38,7 +38,7 @@ return [
 			'enableStrictParsing' => true,
 			'rules' => [
                 ['class' => 'yii\rest\UrlRule',
-                    'controller' => 'v1/article',
+                    'controller' => ['v1/article'],
                     'ruleConfig'=>[
                         'class'=>'yii\web\UrlRule',
                         'defaults'=>[

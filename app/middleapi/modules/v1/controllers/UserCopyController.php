@@ -3,7 +3,6 @@
 namespace middleapi\modules\v1\controllers;
 
 use yii;
-use yii\rest\ActiveController;
 use yii\helpers\ArrayHelper;
 use yii\filters\auth\QueryParamAuth;
 use middleapi\models\LoginForm;
@@ -36,27 +35,6 @@ class UserCopyController extends BaseController
 
         return $behavior;
     }
-
-//    public function behaviors() {
-//
-//        $behavior = parent::behaviors();
-//        unset($behavior['rateLimiter']);
-//        $behavior['rateLimiter'] = [
-//            'class' => RateLimiter::className(),
-//            'enableRateLimitHeaders' => true,
-//        ];
-//
-//         ArrayHelper::merge ($behavior, [
-//            'authenticator' => [
-//                'class' => QueryParamAuth::className(),
-//                'optional' => [
-//                    'login',
-//                ],
-//            ],
-//         ]);
-//
-//         return $behavior;
-//    }
 
     public function actionLogin ()
     {

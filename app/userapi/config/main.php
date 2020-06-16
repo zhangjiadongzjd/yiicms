@@ -37,11 +37,18 @@ return [
 			'showScriptName' => false,
 			'enableStrictParsing' => true,
 			'rules' => [
-				[
-					'class' => 'yii\rest\UrlRule',
-					'controller' => ['v1/article'],
-					'pluralize'=>false,
-				],
+                ['class' => 'yii\rest\UrlRule',
+                    'controller' => ['v1/article'],
+                    'ruleConfig'=>[
+                        'class'=>'yii\web\UrlRule',
+                        'defaults'=>[
+                            'expand'=>'createdBy',
+                        ]
+                    ],
+                    'extraPatterns'=>[
+                        'POST search' => 'search',
+                    ],
+                ],
 				[
 					'class' => 'yii\rest\UrlRule',
 					'controller' => ['v1/user'],

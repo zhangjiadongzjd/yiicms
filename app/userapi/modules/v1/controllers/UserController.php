@@ -2,25 +2,38 @@
 
 namespace userapi\modules\v1\controllers;
 
+use api\components\BaseController;
 use yii;
-use yii\rest\ActiveController;
 use yii\helpers\ArrayHelper;
 use yii\filters\auth\QueryParamAuth;
 use userapi\models\LoginForm;
+use userapi\components\UserBaseController;
+use yii\filters\RateLimiter;
 
-class UserController extends ActiveController
+class UserController extends UserBaseController
 {	
     public $modelClass = 'common\models\User';
 
     public function behaviors() {
-        return ArrayHelper::merge (parent::behaviors(), [ 
-                'authenticator' => [ 
-                    'class' => QueryParamAuth::className(),
-					'optional' => [
-						'login',
-					],
-                ] 
-        ] );
+
+        $behavior = parent::behaviors();
+        unset($behavior['rateLimiter']);
+        $behavior['rateLimiter'] = [
+            'class' => RateLimiter::className(),
+            'enableRateLimitHeaders' => true,
+        ];
+        $this->optional = ['login'];
+        unset($behavior['authenticator']);
+        ArrayHelper::merge ($behavior, [
+            'authenticator' => [
+                'class' => QueryParamAuth::className(),
+                'optional' => [
+                    'login',
+                ],
+            ],
+        ]);
+
+        return $behavior;
     }
 	
 	public function actionLogin ()

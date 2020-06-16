@@ -9,6 +9,7 @@ use common\models\Article;
 use yii\filters\RateLimiter;
 use yii\filters\auth\QueryParamAuth;
 use yii\helpers\ArrayHelper;
+use yii\Redis;
 
 class ArticleController extends ActiveController
 {	
@@ -58,18 +59,24 @@ class ArticleController extends ActiveController
         return Article::find()->where(['like','title',$_POST['keyword']])->all();
     }
 
-    public function actionSetRedis()
+    public function actionSetCache()
     {
-        echo 111;die;
         // 获取 cache 组件
         $cache = Yii::$app->cache;
 
         // 判断 key 为 username 的缓存是否存在，有则打印，没有则赋值
         $key = 'username';
         if ($cache->exists($key)) {
-            var_dump($cache->get($key));
+//            var_dump($cache->get($key));
+            return $cache->get($key);
         } else {
             $cache->set($key, 'marko', 60);
         }
+    }
+
+    public function actionSetRedis()
+    {
+        Yii::$app->redis->set('test','hello yii2-reids');  //设置redis缓存
+        return Yii::$app->redis->get('test');   //读取redis缓存
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace middleapi\components;
+namespace userapi\components;
 
 use Yii;
 use yii\rest\ActiveController;
@@ -17,7 +17,7 @@ use yii\base\Controller;
  *
  * @package middleapi\modules\v1\controllers
  */
-class BaseController extends ActiveController
+class UserBaseController extends ActiveController
 {
 
     // 不需进行token权限认证的方法
