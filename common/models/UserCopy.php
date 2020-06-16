@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\filters\RateLimitInterface;  //启用速率限制
 use yii\web\IdentityInterface;
 use yii\helpers\ArrayHelper;
 
@@ -33,7 +34,7 @@ use yii\helpers\ArrayHelper;
  * @property string $balance 余额
  * @property int $updated_at 更新时间
  */
-class UserCopy extends \yii\db\ActiveRecord implements IdentityInterface
+class UserCopy extends ActiveRecord implements IdentityInterface, RateLimitInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
@@ -155,6 +156,7 @@ class UserCopy extends \yii\db\ActiveRecord implements IdentityInterface
     public static function findByMobile($mobile){
         return static::findOne(['mobile' => $mobile, 'status' => self::STATUS_ACTIVE]);
     }
+
     /**
      * Finds user by password reset token
      *
@@ -275,5 +277,23 @@ class UserCopy extends \yii\db\ActiveRecord implements IdentityInterface
         $data = self::find()->where(['>','r_id',$r_id])->asArray()->all();
         $data_list = ArrayHelper::map($data, 'id', 'username');
         return $data_list;
+    }
+
+    // 返回某一时间允许请求的最大数量，比如设置10秒内最多5次请求（小数量方便我们模拟测试）
+    public  function getRateLimit($request, $action){
+//        return [5, 10];
+        return [2, 10];
+    }
+
+    // 回剩余的允许的请求和相应的UNIX时间戳数 当最后一次速率限制检查时
+    public  function loadAllowance($request, $action){
+        return [$this->allowance, $this->allowance_updated_at];
+    }
+
+    // 保存允许剩余的请求数和当前的UNIX时间戳
+    public  function saveAllowance($request, $action, $allowance, $timestamp){
+        $this->allowance = $allowance;
+        $this->allowance_updated_at = $timestamp;
+        $this->save();
     }
 }

@@ -7,21 +7,56 @@ use yii\rest\ActiveController;
 use yii\helpers\ArrayHelper;
 use yii\filters\auth\QueryParamAuth;
 use middleapi\models\LoginForm;
+use yii\filters\RateLimiter;
+use middleapi\components\BaseController;
 
-class UserCopyController extends ActiveController
+
+class UserCopyController extends BaseController
 {
     public $modelClass = 'common\models\UserCopy';
 
     public function behaviors() {
-        return ArrayHelper::merge (parent::behaviors(), [
+
+        $behavior = parent::behaviors();
+        unset($behavior['rateLimiter']);
+        $behavior['rateLimiter'] = [
+            'class' => RateLimiter::className(),
+            'enableRateLimitHeaders' => true,
+        ];
+        $this->optional = ['login'];
+        unset($behavior['authenticator']);
+        ArrayHelper::merge ($behavior, [
             'authenticator' => [
                 'class' => QueryParamAuth::className(),
                 'optional' => [
                     'login',
                 ],
             ],
-        ] );
+        ]);
+
+        return $behavior;
     }
+
+//    public function behaviors() {
+//
+//        $behavior = parent::behaviors();
+//        unset($behavior['rateLimiter']);
+//        $behavior['rateLimiter'] = [
+//            'class' => RateLimiter::className(),
+//            'enableRateLimitHeaders' => true,
+//        ];
+//
+//         ArrayHelper::merge ($behavior, [
+//            'authenticator' => [
+//                'class' => QueryParamAuth::className(),
+//                'optional' => [
+//                    'login',
+//                ],
+//            ],
+//         ]);
+//
+//         return $behavior;
+//    }
 
     public function actionLogin ()
     {
@@ -53,7 +88,8 @@ class UserCopyController extends ActiveController
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        return static::findOne(['access_token' => $token, 'status' => self::STATUS_ACTIVE]);
+//        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
     /**

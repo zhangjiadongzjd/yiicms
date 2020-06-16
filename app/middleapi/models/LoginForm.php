@@ -34,19 +34,6 @@ class LoginForm extends Model
         ];
     }
 
-    public function validateCaptcha($attribute, $params)
-    {
-//        $caprcha = new CaptchaValidator();
-//
-//        $result = $caprcha->validate($this->verifyCode);
-        $caprcha = new CaptchaValidator();
-
-//        $result = $caprcha->validate($code,false);
-        if(!$caprcha->validate(Yii::$app->request->post('verifyCode'))){
-            $this->addError($attribute, '1231313');
-        }
-    }
-
     /**
      * Validates the password.
      * This method serves as the inline validation for password.
@@ -79,7 +66,6 @@ class LoginForm extends Model
 			$this->_user->last_login_date = time();
 			$this->_user->last_login_ip = Yii::$app->request->getRemoteIP();
 			$this->_user->last_login_address = $ipaddress->getIpAddress($this->_user->last_login_ip);
-//            $this->_user->validate(['username','password']);
             $this->_user->save();
             return  $accessToken;
         } else {
