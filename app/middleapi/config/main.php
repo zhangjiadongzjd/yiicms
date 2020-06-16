@@ -46,7 +46,8 @@ return [
                         ]
                     ],
                     'extraPatterns'=>[
-                        'POST search' => 'search'
+                        'POST search' => 'search',
+                        'POST set-redis' => 'set-redis'
                     ],
                 ],
 				[
