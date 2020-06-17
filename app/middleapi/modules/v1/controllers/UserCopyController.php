@@ -7,7 +7,7 @@ use yii\helpers\ArrayHelper;
 use yii\filters\auth\QueryParamAuth;
 use middleapi\models\LoginForm;
 use yii\filters\RateLimiter;
-use middleapi\components\BaseController;
+use middleapi\controllers\BaseController;
 
 
 class UserCopyController extends BaseController

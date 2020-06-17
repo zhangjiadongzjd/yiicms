@@ -3,11 +3,11 @@
 namespace middleapi\modules\v1\controllers;
 
 use yii;
-use yii\rest\ActiveController;
 use yii\captcha\CaptchaValidator;
 use yii\captcha\CaptchaAction;
+use middleapi\controllers\BaseController;
 
-class VerifyController extends ActiveController
+class VerifyController extends BaseController
 {
 
     public $modelClass = '';
@@ -39,16 +39,6 @@ class VerifyController extends ActiveController
         $code = $c->getVerifyCode(true);
 //        $c->run();
         return $code;
-    }
-
-    public function actionValidateYzm ()
-    {
-        $caprcha = new CaptchaValidator();
-
-//        $result = $caprcha->validate($code,false);
-        if(!$caprcha->validate(Yii::$app->request->post('verifyCode'))){
-            $this->addError('111', '1231313');
-        }
     }
 
     public function actions()

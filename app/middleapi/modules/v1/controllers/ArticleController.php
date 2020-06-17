@@ -3,15 +3,14 @@
 namespace middleapi\modules\v1\controllers;
 
 use yii;
-use yii\rest\ActiveController;
+use middleapi\controllers\BaseController;
 use yii\data\ActiveDataProvider;
 use common\models\Article;
-use yii\filters\RateLimiter;
 use yii\filters\auth\QueryParamAuth;
 use yii\helpers\ArrayHelper;
 use yii\Redis;
 
-class ArticleController extends ActiveController
+class ArticleController extends BaseController
 {	
     public $modelClass = 'common\models\Article';
 	

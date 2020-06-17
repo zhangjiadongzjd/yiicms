@@ -1,11 +1,10 @@
 <?php
 
-namespace middleapi\components;
+namespace middleapi\controllers;
 
 use Yii;
 use yii\rest\ActiveController;
 use yii\filters\auth\QueryParamAuth;
-use yii\base\Controller;
 
 /**
  * 这里注意是继承 yii\rest\ActiveController 因为源码中已经帮我们实现了index/update等方法

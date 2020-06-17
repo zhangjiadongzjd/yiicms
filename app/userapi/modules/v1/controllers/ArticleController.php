@@ -7,8 +7,9 @@ use yii\data\ActiveDataProvider;
 use yii\filters\auth\QueryParamAuth;
 use yii\helpers\ArrayHelper;
 use common\models\Article;
+use userapi\controllers\BaseController;
 
-class ArticleController extends ActiveController
+class ArticleController extends BaseController
 {	
     public $modelClass = 'common\models\Article';
 	

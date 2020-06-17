@@ -2,15 +2,14 @@
 
 namespace userapi\modules\v1\controllers;
 
-use api\components\BaseController;
 use yii;
 use yii\helpers\ArrayHelper;
 use yii\filters\auth\QueryParamAuth;
 use userapi\models\LoginForm;
-use userapi\components\UserBaseController;
+use userapi\controllers\BaseController;
 use yii\filters\RateLimiter;
 
-class UserController extends UserBaseController
+class UserController extends BaseController
 {	
     public $modelClass = 'common\models\User';
 

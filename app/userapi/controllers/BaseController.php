@@ -1,11 +1,10 @@
 <?php
 
-namespace userapi\components;
+namespace userapi\controllers;
 
 use Yii;
 use yii\rest\ActiveController;
 use yii\filters\auth\QueryParamAuth;
-use yii\base\Controller;
 
 /**
  * 这里注意是继承 yii\rest\ActiveController 因为源码中已经帮我们实现了index/update等方法
@@ -17,7 +16,7 @@ use yii\base\Controller;
  *
  * @package middleapi\modules\v1\controllers
  */
-class UserBaseController extends ActiveController
+class BaseController extends ActiveController
 {
 
     // 不需进行token权限认证的方法
