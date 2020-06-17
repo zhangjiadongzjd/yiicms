@@ -22,6 +22,7 @@ return [
 			'identityClass' => 'common\models\User',
 			'enableAutoLogin' => true,
 			'enableSession' => false,
+            'as afterLogin' => 'userapi\behaviors\AfterLoginBehavior',
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

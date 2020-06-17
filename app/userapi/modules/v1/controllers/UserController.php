@@ -40,23 +40,21 @@ class UserController extends BaseController
         return $behavior;
     }
 
-    public function __construct()
-    {
-        $this->on(self::EVENT_AFTER_LOGIN,['userapi\component\AfterLogin','hello']);
-    }
+//    public function __construct()
+//    {
+//        $this->on(self::EVENT_AFTER_LOGIN,['userapi\component\AfterLogin','hello']);
+//    }
 
     public function actionLogin ()
 	{
 		$model = new LoginForm;
 		$model->setAttributes(Yii::$app->request->post());
 		$access_token = $model->login();
-		$user = new User();
-		$user_info = $user->getId();
-		var_dump($user_info);die;
+
         if ($access_token) {
-            $event = new AfterLoginEvent;
-            $event->userId = 'after_login';
-            $this->trigger(self::EVENT_AFTER_LOGIN);
+//            $event = new AfterLoginEvent;
+//            $event->userId = 'after_login';
+//            $this->trigger(self::EVENT_AFTER_LOGIN);
             return ['access-token' => $access_token];
         }
         else {
