@@ -97,7 +97,9 @@ class User extends ActiveRecord implements IdentityInterface, RateLimitInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-		$user = static::find()->where(['access_token'=>$token , 'status' => self::STATUS_ACTIVE])->one();
+		$user = static::find()->where(['access_token'=>$token , 'status' => self::STATUS_ACTIVE])
+                              ->andWhere(['>','expire_at',time()])
+                              ->one();
 		if($user){
 			return $user;
 		}else{
@@ -144,6 +146,7 @@ class User extends ActiveRecord implements IdentityInterface, RateLimitInterface
 	public static function findByMobile($mobile){
 		return static::findOne(['mobile' => $mobile, 'status' => self::STATUS_ACTIVE]);
 	}
+
 	/**
      * Finds user by password reset token
      *

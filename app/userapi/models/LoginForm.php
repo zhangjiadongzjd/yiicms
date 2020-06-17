@@ -55,13 +55,15 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            $accessToken = $this->_user->generateAccessToken(time()+2400);
+            $accessToken = $this->_user->generateAccessToken(time()+6*60);
+            $this->_user->expire_at = time()+6*60; //设定token过期时间
             $ipaddress = new ipaddress();
 			//下面更新用户登录相关信息
 			$this->_user->last_login_date = time();
 			$this->_user->last_login_ip = Yii::$app->request->getRemoteIP();
 			$this->_user->last_login_address = $ipaddress->getIpAddress($this->_user->last_login_ip);
             $this->_user->save();
+            Yii::$app->user->login($this->_user,6*60);
             return  $accessToken;
         } else {
             return false;

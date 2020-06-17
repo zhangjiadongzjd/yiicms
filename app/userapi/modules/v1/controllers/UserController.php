@@ -8,9 +8,14 @@ use yii\filters\auth\QueryParamAuth;
 use userapi\models\LoginForm;
 use userapi\controllers\BaseController;
 use yii\filters\RateLimiter;
+use userapi\events\AfterLoginEvent;
+use common\models\User;
 
 class UserController extends BaseController
-{	
+{
+
+    const EVENT_AFTER_LOGIN = 'after_login';
+
     public $modelClass = 'common\models\User';
 
     public function behaviors() {
@@ -34,17 +39,30 @@ class UserController extends BaseController
 
         return $behavior;
     }
-	
-	public function actionLogin ()
+
+    public function __construct()
+    {
+        $this->on(self::EVENT_AFTER_LOGIN,['userapi\component\AfterLogin','hello']);
+    }
+
+    public function actionLogin ()
 	{
 		$model = new LoginForm;
 		$model->setAttributes(Yii::$app->request->post());
-        if ($model->login()) {
-            return ['access-token' => $model->login()];
+		$access_token = $model->login();
+		$user = new User();
+		$user_info = $user->getId();
+		var_dump($user_info);die;
+        if ($access_token) {
+            $event = new AfterLoginEvent;
+            $event->userId = 'after_login';
+            $this->trigger(self::EVENT_AFTER_LOGIN);
+            return ['access-token' => $access_token];
         }
         else {
             $model->validate();
             return $model;
         }
 	}
+
 }
