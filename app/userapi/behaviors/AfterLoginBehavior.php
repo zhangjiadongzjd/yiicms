@@ -31,23 +31,15 @@ class AfterLoginBehavior extends Behavior
      */
     public function afterLogin($event)
     {
-        echo 1111;die;
-        if ($model = $event->identity->userInfo) {
-            $model->login_count += 1;
-            $model->prev_login_time = $model->last_login_time;
-            $model->prev_login_ip = $model->last_login_ip;
-            $model->last_login_time = time();
-            $model->last_login_ip = Yii::$app->getRequest()->getUserIP();
+        $model = $event->identity;
+        if (!empty($model)) {
 
             if (!Yii::$app->session->isActive) {
                 Yii::$app->session->open();
             }
-            $model->session_id = Yii::$app->session->id;
-            Yii::$app->session->close();
+            Yii::$app->session->set('user'.$model->username, ['id' => $model->id, 'username' => $model->username]);
 
-            if ($model->save()) {
-                return true;
-            }
+            Yii::$app->session->close();
 
         }
         return false;

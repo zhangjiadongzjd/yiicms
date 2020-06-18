@@ -24,6 +24,18 @@ class BaseController extends ActiveController
 
     public $user;
 
+
+//    public function __construct()
+//    {
+//        if(Yii::$app->user->isGuest){
+//            $data=array(
+//                'code'=>100,
+//                'message'=>'用户未登录',
+//                'data'=>'',
+//            );
+//            return json_encode($data);
+//        }
+//    }
     /**
      * ---------------------------------------
      * 构造方法
@@ -72,5 +84,20 @@ class BaseController extends ActiveController
         $this->user = $identity ? $identity->getAttributes() : null;
     }
 
+    public function beforeAction($action)
+    {
+        parent::beforeAction($action);
+        var_dump(Yii::$app->user->isGuest);die;
+        if(Yii::$app->user->isGuest){
+            $data=array(
+                'code'=>100,
+                'message'=>'用户未登录',
+                'data'=>'',
+            );
+            return json_encode($data);
+        }
+
+        return $action;
+    }
 
 }

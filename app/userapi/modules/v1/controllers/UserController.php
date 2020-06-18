@@ -5,13 +5,13 @@ namespace userapi\modules\v1\controllers;
 use yii;
 use yii\helpers\ArrayHelper;
 use yii\filters\auth\QueryParamAuth;
+use yii\filters\RateLimiter;  //启用速率限制
 use userapi\models\LoginForm;
-use userapi\controllers\BaseController;
-use yii\filters\RateLimiter;
+use yii\rest\ActiveController;
 use userapi\events\AfterLoginEvent;
 use common\models\User;
 
-class UserController extends BaseController
+class UserController extends ActiveController
 {
 
     const EVENT_AFTER_LOGIN = 'after_login';
@@ -26,7 +26,6 @@ class UserController extends BaseController
             'class' => RateLimiter::className(),
             'enableRateLimitHeaders' => true,
         ];
-        $this->optional = ['login'];
         unset($behavior['authenticator']);
         ArrayHelper::merge ($behavior, [
             'authenticator' => [
@@ -40,11 +39,6 @@ class UserController extends BaseController
         return $behavior;
     }
 
-//    public function __construct()
-//    {
-//        $this->on(self::EVENT_AFTER_LOGIN,['userapi\component\AfterLogin','hello']);
-//    }
-
     public function actionLogin ()
 	{
 		$model = new LoginForm;
@@ -52,9 +46,6 @@ class UserController extends BaseController
 		$access_token = $model->login();
 
         if ($access_token) {
-//            $event = new AfterLoginEvent;
-//            $event->userId = 'after_login';
-//            $this->trigger(self::EVENT_AFTER_LOGIN);
             return ['access-token' => $access_token];
         }
         else {
@@ -62,5 +53,14 @@ class UserController extends BaseController
             return $model;
         }
 	}
+
+    public function actionLogout()
+    {
+//        var_dump(Yii::$app->user->isGuest);die;
+        $logout = Yii::$app->user->logout();
+        var_dump(Yii::$app->user->isGuest);die;
+        return $logout;
+//        var_dump(Yii::$app->user->isGuest);
+    }
 
 }

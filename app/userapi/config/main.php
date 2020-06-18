@@ -48,6 +48,7 @@ return [
                     ],
                     'extraPatterns'=>[
                         'POST search' => 'search',
+                        'GET hello' => 'hello'
                     ],
                 ],
 				[
@@ -56,8 +57,17 @@ return [
 					'pluralize'=>false,
                     'extraPatterns' => [
                         'POST login' => 'login',
+                        'POST logout' => 'logout'
                     ]
-				]
+				],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => ['v1/log-out'],
+                    'pluralize'=>false,
+                    'extraPatterns' => [
+                        'POST logout' => 'logout'
+                    ]
+                ]
 			]
 		],
     ],
