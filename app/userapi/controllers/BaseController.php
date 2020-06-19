@@ -5,6 +5,7 @@ namespace userapi\controllers;
 use Yii;
 use yii\rest\ActiveController;
 use yii\filters\auth\QueryParamAuth;
+use common\helps\Tools;
 
 /**
  * 这里注意是继承 yii\rest\ActiveController 因为源码中已经帮我们实现了index/update等方法
@@ -24,18 +25,6 @@ class BaseController extends ActiveController
 
     public $user;
 
-
-//    public function __construct()
-//    {
-//        if(Yii::$app->user->isGuest){
-//            $data=array(
-//                'code'=>100,
-//                'message'=>'用户未登录',
-//                'data'=>'',
-//            );
-//            return json_encode($data);
-//        }
-//    }
     /**
      * ---------------------------------------
      * 构造方法
@@ -71,6 +60,11 @@ class BaseController extends ActiveController
         return $behaviors;
     }
 
+    public function beforeAction($action)
+    {
+        return Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    }
+
     /**
      * ---------------------------------------
      * 获取当前登录用户信息
@@ -82,22 +76,6 @@ class BaseController extends ActiveController
     public function getIdentity() {
         $identity = Yii::$app->user->getIdentity();
         $this->user = $identity ? $identity->getAttributes() : null;
-    }
-
-    public function beforeAction($action)
-    {
-        parent::beforeAction($action);
-        var_dump(Yii::$app->user->isGuest);die;
-        if(Yii::$app->user->isGuest){
-            $data=array(
-                'code'=>100,
-                'message'=>'用户未登录',
-                'data'=>'',
-            );
-            return json_encode($data);
-        }
-
-        return $action;
     }
 
 }

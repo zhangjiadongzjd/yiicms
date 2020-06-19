@@ -9,6 +9,7 @@ use yii\filters\RateLimiter;  //启用速率限制
 use userapi\models\LoginForm;
 use yii\rest\ActiveController;
 use userapi\events\AfterLoginEvent;
+use common\helps\Tools;
 use common\models\User;
 
 class UserController extends ActiveController
@@ -31,12 +32,17 @@ class UserController extends ActiveController
             'authenticator' => [
                 'class' => QueryParamAuth::className(),
                 'optional' => [
-                    'login',
+                    'login'
                 ],
             ],
         ]);
 
         return $behavior;
+    }
+
+    public function beforeAction($action)
+    {
+        return Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
     }
 
     public function actionLogin ()
@@ -56,11 +62,13 @@ class UserController extends ActiveController
 
     public function actionLogout()
     {
-//        var_dump(Yii::$app->user->isGuest);die;
-        $logout = Yii::$app->user->logout();
-        var_dump(Yii::$app->user->isGuest);die;
-        return $logout;
-//        var_dump(Yii::$app->user->isGuest);
+        $user_id = Yii::$app->user->identity->id;
+
+        $model = new LoginForm;
+        $logout = $model->logout($user_id);
+        if($logout){
+            return Tools::json_data(200,'退出成功');
+        }
     }
 
 }

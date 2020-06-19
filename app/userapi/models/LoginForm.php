@@ -71,17 +71,12 @@ class LoginForm extends Model
         }
     }
 
-    public function logout(){
-        $accessToken = $this->_user->generateAccessToken(time()+6*60);
-        $this->_user->expire_at = time()+6*60; //设定token过期时间
-        $ipaddress = new ipaddress();
+    public function logout($user_id){
+        $user = User::findOne($user_id);
+        $user->access_token = '';
+        $user->expire_at = 0; //设定token过期时间
         //下面更新用户登录相关信息
-        $this->_user->last_login_date = time();
-        $this->_user->last_login_ip = Yii::$app->request->getRemoteIP();
-        $this->_user->last_login_address = $ipaddress->getIpAddress($this->_user->last_login_ip);
-        $this->_user->save();
-
-        return  $accessToken;
+        return $user->save();
     }
 
     /**
